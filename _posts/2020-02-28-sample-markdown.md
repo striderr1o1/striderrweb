@@ -1,100 +1,26 @@
 ---
 layout: post
-title: Sample blog post to learn markdown tips
-subtitle: There's lots to learn!
-gh-repo: daattali/beautiful-jekyll
-gh-badge: [star, fork, follow]
-tags: [test]
+title: My Journey into Tech
+subtitle: start small, but atleast start
+# gh-repo: daattali/beautiful-jekyll
+# gh-badge: [star, fork, follow]
+# tags: [test]
 comments: true
 mathjax: true
-author: Bill Smith
+author: Mustafa
 ---
 
-{: .box-success}
-This is a demo post to show you how to write blog posts with markdown.  I strongly encourage you to [take 5 minutes to learn how to write in markdown](https://markdowntutorial.com/) - it'll teach you how to transform regular text into bold/italics/tables/etc.<br/>I also encourage you to look at the [code that created this post](https://raw.githubusercontent.com/daattali/beautiful-jekyll/master/_posts/2020-02-28-sample-markdown.md) to learn some more advanced tips about using markdown in Beautiful Jekyll.
 
-**Here is some bold text**
+## First Exposure
+My first exposure to computer programming was when I was in eighth grade. My father introduced me to CS50 by Harvard University. I remember typing some crazy stuff in the command line to compile my C code. Anyways, I quit after a few days.
 
-## Here is a secondary heading
+## School Days
+If my memory serves me right, my second exposure was in tenth grade. We had some C programming in our syllabus. I remember writing simple programs in C on Dev C++. I really enjoyed it. I think, it was then, that I really started to think of higher education in computer science.
 
-[This is a link to a different site](https://deanattali.com/) and [this is a link to a section inside this page](#local-urls).
+## After Enrolling in CS Program
+Fast forward to the summer before joining undergraduate program, I had already explored some python, a bit of data science, watched some of CS50 and also completed one or two cs50 assignments in C. So you can say that I was not completely new to programming. This prior experience in programming helped alot, primarily in the first semester. And another good decision was to not do assignments using AI tools like chatgpt. Yes, I did assignments using my bare hands. I didn't use chatgpt to copy paste, but I used it to learn (although, I've dropped that pov, but ok). If I had copied and pasted code using LLMs, I probably would be a loser in programming right now.
 
-Here's a table:
+First semester, we covered fundamentals of C++, plus some HTML, CSS and JS. Second semester, we did OOP. In the winter and summer breaks, I discovered more about web development, primarily HTML, CSS and JS. And it was in summer, that I dived deep into HTML and CSS. Additionally, I enrolled in a Generative AI training. I might not be exaggerating if say that I spent a good amount of my time in summer learning how to code. I’d say, it was worth it. Especially, talking about the Gen AI training, where learned about RAG, Agentic AI, LLM apps and crazy stuff that's in the hype right now, it gave me quite an idea of this domain. And right now, Its been one month into the third semester and I've decided to focus on Data structures and algorithms. It seems to be important right now.
 
-| Number | Next number | Previous number |
-| :------ |:--- | :--- |
-| Five | Six | Four |
-| Ten | Eleven | Nine |
-| Seven | Eight | Six |
-| Two | Three | One |
-
-You can use [MathJax](https://www.mathjax.org/) to write LaTeX expressions. For example:
-When \\(a \ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
-
-How about a yummy crepe?
-
-![Crepe](https://beautifuljekyll.com/assets/img/crepe.jpg)
-
-It can also be centered!
-
-![Crepe](https://beautifuljekyll.com/assets/img/crepe.jpg){: .mx-auto.d-block :}
-
-Here's a code chunk:
-
-~~~
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-~~~
-
-And here is the same code with syntax highlighting:
-
-```javascript
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-```
-
-And here is the same code yet again but with line numbers:
-
-{% highlight javascript linenos %}
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-{% endhighlight %}
-
-## Boxes
-You can add notification, warning and error boxes like this:
-
-### Notification
-
-{: .box-note}
-**Note:** This is a notification box.
-
-### Warning
-
-{: .box-warning}
-**Warning:** This is a warning box.
-
-### Error
-
-{: .box-error}
-**Error:** This is an error box.
-
-## Local URLs in project sites {#local-urls}
-
-When hosting a *project site* on GitHub Pages (for example, `https://USERNAME.github.io/MyProject`), URLs that begin with `/` and refer to local files may not work correctly due to how the root URL (`/`) is interpreted by GitHub Pages. You can read more about it [in the FAQ](https://beautifuljekyll.com/faq/#links-in-project-page). To demonstrate the issue, the following local image will be broken **if your site is a project site:**
-
-![Crepe](/assets/img/crepe.jpg)
-
-If the above image is broken, then you'll need to follow the instructions [in the FAQ](https://beautifuljekyll.com/faq/#links-in-project-page). Here is proof that it can be fixed:
-
-![Crepe]({{ '/assets/img/crepe.jpg' | relative_url }})
-
-<details markdown="1">
-<summary>Click here!</summary>
-Here you can see an **expandable** section
-</details>
+## Ending words…
+If you've read this far, thanks. This was my journey into programming and tech in-general. If you have something to share about your journey or if you want to discuss something tech-related, DM me on linkedin so that we can discuss.
