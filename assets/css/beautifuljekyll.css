@@ -869,14 +869,13 @@ table tr td :last-child {
 
 code {
   padding: 0.125rem 0.25rem;
-  color: #1c6aa2;
+  color: #c7254e;
   background-color: #f9f2f4;
   border-radius: 0.25rem;
 }
 
 pre code {
   padding: 0;
-  color: rgb(133, 130, 130);
   background-color: transparent;
   border-radius: 0;
 }
@@ -969,7 +968,7 @@ pre {
 
 .box-error {
   background-color: #f4dddb;
-  border-left-color: #257499;
+  border-left-color: #c0392b;
 }
 
 .box-success {
