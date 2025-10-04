@@ -185,12 +185,12 @@ client = Groq(
 )
 MODEL_NAME = "llama3-70b-8192"
 ```
-and now we define the function in which we do all the tool/function calling with the help of an LLM. We pass the tools schema to the function. And then, to the LLM. We also instruct the LLM how to use the tools.
+and now we define the function in which we do all the tool/function calling with the help of an LLM. We pass the tools schema to the function. And then, to the LLM. We also instruct the LLM how to use the tools.We also set the tool_choice to auto.
 **Note**: Retrieval Tool is for RAG and weather tool is for searching weather on the tavily search engine.
 ```python
 def CallLLM(query, tools=tools):
     response1 = client.chat.completions.create(
-    model=MODEL_NAME,  # or llama3-8b, mixtral, etc.
+    model=MODEL_NAME,  # or llama3-8b, etc.
     messages=[
         {"role": "system", "content": """Only call the weather tool if the user explicitly
                                          asks for weather information. If the word 'weather' is
