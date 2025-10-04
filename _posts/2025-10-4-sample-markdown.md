@@ -35,6 +35,28 @@ ELEVEN_LAB_APIKEY = ""
 TAVILY_API_KEY=""
 ```
 
+Install these requirements:
+```
+streamlit
+PyPDF2
+langchain
+langchain_groq
+chromadb
+ollama
+langchain_community
+sentence-transformers
+elevenlabs
+groq
+numpy
+pygame
+sounddevice
+fastapi
+multipart
+tavily-python
+streamlit-audiorec
+```
+Its possible that i've missed something, in such a case, you can contact me on my linkedin or email me.
+
 ### Ingestion.py:
 importing the splitter to split text into chunks and creating a function over it:
 ```python
@@ -213,3 +235,70 @@ def CallLLM(query, tools=tools):
 ```
 
 ### Voice-Functions(voicefunctions.py):
+Much of the code here I took from AI tools, which I don't recommend mostly for some reasons, but anyways. We start off by making this function:
+```python
+import sounddevice as sd
+import numpy as np
+from dotenv import load_dotenv
+load_dotenv()
+
+def record_voice(filename="input.wav", duration=5, sample_rate=16000):
+    print(f"Recording for {duration} seconds...")
+    audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype="float32")
+    sd.wait()
+    # Convert float32 (-1..1) to int16 for WAV
+    audio_int16 = np.int16(audio * 32767)
+    wav.write(filename, sample_rate, audio_int16)
+    print(f"Saved to {filename}")
+```
+This records your voice and make a .wav file of your audio.
+Next, initialize the ElevenLabs clients:
+```python
+import os
+from elevenlabs import ElevenLabs, play
+from io import BytesIO
+client = ElevenLabs(
+    api_key=os.environ.get("ELEVEN_LAB_APIKEY"),
+)
+```
+And now the elevenlabs function, that basically takes your .wav audio file, hard-coded model ID, and some other things to convert your speech to text. For this, I also referred to the official docs of elevenLabs: [link] (https://elevenlabs.io/docs/cookbooks/speech-to-text/quickstart)
+```python
+def SpeechToText(audio_file, model_id="scribe_v1", language_code="eng",
+                 tag_audio_events=True, diarize=True):
+    with open(audio_file, "rb") as f:
+        audio_data = BytesIO(f.read())
+
+    transcription = client.speech_to_text.convert(
+        file=audio_data,
+        model_id=model_id,
+        tag_audio_events=tag_audio_events,
+        language_code=language_code,  # None for auto-detect
+        diarize=diarize
+    )
+    
+    return transcription.text
+```
+Now, we make another function that converts the AI response to speech. Also referred to ElevenLab docs for this: [link] (https://elevenlabs.io/docs/quickstart)
+```python
+import streamlit as st
+def TextToSpeech(text):
+    audio = client.text_to_speech.convert(
+
+    text=text,
+
+    voice_id="nPczCjzI2devNBz1zQrb",
+
+    model_id="eleven_multilingual_v2",
+
+    output_format="mp3_44100_128",
+
+    )
+    st.header('AI Reply:')
+    
+    play(audio)
+    st.write(text)
+```
+These were the tts-stt related modules. Now we move towards connecting stuff.
+
+### Linking All the Modules
+At this voice, you can create a simple streamlit frontend and have the voice input received via the frontend. 
