@@ -876,7 +876,7 @@ code {
 
 pre code {
   padding: 0;
-  color: grey;
+  color: rgb(133, 130, 130);
   background-color: transparent;
   border-radius: 0;
 }
@@ -969,7 +969,7 @@ pre {
 
 .box-error {
   background-color: #f4dddb;
-  border-left-color: #c0392b;
+  border-left-color: #257499;
 }
 
 .box-success {
