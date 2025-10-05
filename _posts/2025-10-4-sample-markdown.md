@@ -1,7 +1,7 @@
 ---
 layout: post
 title: How I built a Voice AI
-subtitle: sounds cool, eh? heres how I did it and you can too...
+subtitle: Heres how I did it and you can too...
 gh-repo: striderr1o1/AI-City-Info-BOT
 # gh-badge: [star, fork, follow]
 # tags: [test]
@@ -26,7 +26,7 @@ In the early stages, I didnt know what would be the use-case for my project, i.e
 ## How I built it:
 I started off by creating an ingestion pipeline. For context, we need to ingest documents to store in the vector database to perform Retrieval-Augmented Generation (RAG). For this project, I used ChromaDB.
 
-First you need to create a .env file and fill it with the API keys:
+First we need to create a .env file and fill it with the API keys:
 ```
 GROQ_API_KEY=""
 OLLAMA_EMBEDDING_MODEL="mxbai-embed-large:latest"
@@ -58,7 +58,18 @@ streamlit-audiorec
 Its possible that i've missed something, in such a case, you can contact me on my linkedin or email me.
 
 ### Ingestion.py:
-importing the splitter to split text into chunks and creating a function over it:
+In this file, create the ingestion functions.
+Read PDF using this function:
+```python
+import PyPDF2
+def readPDF(file):
+    pdf_reader = PyPDF2.PdfReader(file)
+    text = ""
+    for page in pdf_reader.pages:
+        text+= page.extract_text()
+    return text
+```
+import the splitter to split text into chunks and create a function over it:
 ```python
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
@@ -94,7 +105,33 @@ def storeInChromaDB(embeddings, texts):
     except Exception as e:
         return f"Exception: {e}"
 ```
+### Create FastAPI Endpoint to Upload PDFs:
+Make a seperate file for this. Either create a FastAPI endpoint, or upload documents through streamlit by creating a new navigation in the streamlit.py file(coming ahead). I'm going with FastAPI endpoint. Import the modules:
+```python
+from fastapi import FastAPI, UploadFile, File
+from ingestion import readPDF, SplitText, createEmbeddings, storeInChromaDB
+app = FastAPI()
+```
+And now the endpoint:
+```python
+@app.post("/upload/")
+async def upload_file(file: UploadFile = File(...)):
+    text = readPDF(file.file)
+    print(text)
+    splittedText = SplitText(text)
+    embeddings = []
+    for text in splittedText:
+        embedded = createEmbeddings(text)
+        embeddings.append(embedded[0])
 
+    
+    status = storeInChromaDB(embeddings, splittedText)
+    
+    return {
+        "Texts": splittedText,
+        "Ingestion in Chroma Status": status 
+    }
+```
 ### Tools For our Ai(tools.py):
 import modules from other files:
 ```python
@@ -118,7 +155,7 @@ llm = ChatGroq(
     api_key=os.environ.get("GROQ_API_KEY")
 )
 ```
-and now we program the retrieval tool:
+and now program the retrieval tool:
 ```python
 def retrieveContext(query):
     client = chromadb.PersistentClient(path="ChromaDB")
@@ -131,7 +168,7 @@ def retrieveContext(query):
     )
     return results["documents"][0]
 ```
-and the weather tool. For this, we use the tavily search engine:
+and the weather tool. For this, use the tavily search engine:
 ```python
 def GetWeatherFromWeb(City):
     tavily_client = TavilyClient(api_key=os.environ.get('TAVILY_API_KEY'))
@@ -139,7 +176,7 @@ def GetWeatherFromWeb(City):
     answer = response['results']
     return answer
 ```
-Now, to pass these tools or functions to the LLM, we need to design their schemas. I used this resource to accomplish this: [link](https://medium.com/@manojkotary/exploring-function-calling-capabilities-with-groq-a-step-by-step-guide-586ab7a165aa).
+Now, to pass these tools or functions to the LLM, you need to design their schemas. I used this resource to accomplish this: [link](https://medium.com/@manojkotary/exploring-function-calling-capabilities-with-groq-a-step-by-step-guide-586ab7a165aa)
 ```python
 tools = [
     {
@@ -186,7 +223,7 @@ client = Groq(
 MODEL_NAME = "llama3-70b-8192"
 ```
 and now we define the function in which we do all the tool/function calling with the help of an LLM. We pass the tools schema to the function. And then, to the LLM. We also instruct the LLM how to use the tools.We also set the tool_choice to auto.
-**Note**: Retrieval Tool is for RAG and weather tool is for searching weather on the tavily search engine.
+**Note**: Retrieval Tool is for RAG from uploaded PDFs and weather tool is for searching weather on the tavily search engine.
 ```python
 def CallLLM(query, tools=tools):
     response1 = client.chat.completions.create(
@@ -261,7 +298,7 @@ client = ElevenLabs(
     api_key=os.environ.get("ELEVEN_LAB_APIKEY"),
 )
 ```
-And now the elevenlabs function, that basically takes your .wav audio file, hard-coded model ID, and some other things to convert your speech to text. For this, I also referred to the official docs of elevenLabs: [link] (https://elevenlabs.io/docs/cookbooks/speech-to-text/quickstart)
+And now the elevenlabs function, that basically takes your .wav audio file, hard-coded model ID, and some other things to convert your speech to text. For this, I also referred to the official docs of elevenLabs: [link](https://elevenlabs.io/docs/cookbooks/speech-to-text/quickstart)
 ```python
 def SpeechToText(audio_file, model_id="scribe_v1", language_code="eng",
                  tag_audio_events=True, diarize=True):
@@ -278,7 +315,7 @@ def SpeechToText(audio_file, model_id="scribe_v1", language_code="eng",
     
     return transcription.text
 ```
-Now, we make another function that converts the AI response to speech. Also referred to ElevenLab docs for this: [link] (https://elevenlabs.io/docs/quickstart)
+Now, we make another function that converts the AI response to speech. Also referred to ElevenLab docs for this: [link](https://elevenlabs.io/docs/quickstart)
 ```python
 import streamlit as st
 def TextToSpeech(text):
@@ -298,7 +335,61 @@ def TextToSpeech(text):
     play(audio)
     st.write(text)
 ```
-These were the tts-stt related modules. Now we move towards connecting stuff.
+These were the tts-stt related modules. Some streamit related stuff "st.header('AI Reply:') and st.write(text)" is also used which displays the output to the screen. Now we move towards connecting stuff.
 
-### Linking All the Modules
-At this voice, you can create a simple streamlit frontend and have the voice input received via the frontend. 
+### Linking All the Modules(main.py/streamlit.py):
+At this, you can create a simple streamlit frontend and have the voice input received via the frontend. So, you import the modules:
+```python
+import streamlit as st
+from st_audiorec import st_audiorec
+from voicefunctions import SpeechToText, TextToSpeech
+from tools import CallLLM
+
+```
+Make a sidebar navigation and radio buttons to navigate:
+```python
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to:", ["Voice Chat"])
+```
+Then comes the implementation:
+```python
+if page == "Voice Chat":
+    st.title("🎙️ Voice Chat with AI Bot")
+    
+    wav_audio_data = st_audiorec()
+    
+    if wav_audio_data is not None:
+        # st.audio(wav_audio_data, format="audio/wav")
+    
+        with open("input.wav", "wb") as f:
+            f.write(wav_audio_data)
+    
+        st.success("Saved recording to input.wav")
+        text = SpeechToText("input.wav")
+        st.header('Query:')
+        st.write(text)
+        reply = CallLLM(text)
+        
+        TextToSpeech(reply)
+    else:
+        st.info("Click the record button above to capture your voice.")
+```
+
+- st_audiorec() records your voice and it comes into wav_audio_data
+- if wav_audio_data exists, it opens input.wav file and writes the audio data in it
+- input.wav is sent to SpeechToText function which returns the text
+- text is sent to CallLLM function which implements the actual Ai functionality. It returns the Ai reply
+- reply is sent to TextToSpeech function which converts the AI's response to speech and plays the audio.
+
+### Run the App:
+In your terminal, type this command:
+```
+streamlit run streamlit.py
+```
+and for uploading your pdf document, run:
+```bash
+uvicorn <filename without including .py >:app --reload
+```
+
+## Conclusion:
+Enjoy your voice agent. Make sure you keep up with new posts. Here's the repo: [link](https://github.com/striderr1o1/AI-City-Info-BOT)
