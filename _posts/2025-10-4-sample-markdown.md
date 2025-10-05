@@ -390,6 +390,7 @@ and for uploading your pdf document, run:
 ```bash
 uvicorn <filename without including .py >:app --reload
 ```
+Then you can run this url: http://127.0.0.1:8000/docs#/ (or just add docs infront of any ipaddress:port)
 
 ## Conclusion:
 Enjoy your voice agent. Make sure you keep up with new posts. Here's the repo: [link](https://github.com/striderr1o1/AI-City-Info-BOT)
