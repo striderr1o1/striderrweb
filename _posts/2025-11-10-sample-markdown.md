@@ -227,7 +227,7 @@ graph = graph_builder.compile()
 
 The frontend is a **React TypeScript** application built with modern tooling and design systems. 
 
-**⚠️ Important Note**: The frontend UI was **not hand-coded by me**. I used **Lovable.dev**, an AI-powered web development platform, to generate the React components and UI design. This allowed me to focus on the backend logic and agent orchestration while still delivering a polished user experience.
+**⚠️ Important Note**: The frontend UI and the FastAPI portion was **not hand-coded by me**. I used **Lovable.dev**, an AI-powered web development platform, to generate the React components and UI design. This allowed me to focus on the backend logic and agent orchestration while still delivering a polished user experience.
 
 ### Key Components
 
