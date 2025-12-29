@@ -2,7 +2,7 @@
 layout: post
 title: I Built a Research Agent using LangGraph
 subtitle: power your researches with agentic ai
-gh-repo: https://github.com/striderr1o1/research-agentai-backend
+gh-repo: striderr1o1/research-agentai-backend
 # gh-badge: [star, fork, follow]
 # tags: [test]
 comments: true
